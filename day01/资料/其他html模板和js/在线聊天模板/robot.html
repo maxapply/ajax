@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <title>聊天机器人</title>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="header">
+      <h3>知心姐姐</h3>
+      <img src="img/person01.png" alt="icon" />
+    </div>
+    <div class="main">
+      <!-- 对话内容-添加 -->
+      <ul class="talk_list" style="top: 0px;">
+        <li class="right_word">
+          <img src="img/person02.png" /> <span>你好哦</span>
+        </li>
+        <li class="left_word">
+          <img src="img/person01.png" /> <span>你好</span>
+        </li>
+        <li class="right_word">
+          <img src="img/person02.png" /> <span>晚上约吗？</span>
+        </li>
+        <li class="left_word">
+          <img src="img/person01.png" /> <span>有约了，下次吧！</span>
+        </li>
+        <li class="right_word">
+          <img src="img/person02.png" /> <span>明天呢？</span>
+        </li>
+        <li class="left_word">
+          <img src="img/person01.png" /> <span>没时间...</span>
+        </li>
+      </ul>
+      <div class="drag_bar" style="display: none;">
+        <div class="drager ui-draggable ui-draggable-handle" style="display: none; height: 412.628px;"></div>
+      </div>
+    </div>
+    <!-- 发送聊天 -->
+    <div class="footer">
+      <img src="img/person02.png" alt="icon" />
+      <input type="text" placeholder="说的什么吧..." class="input_txt" />
+      <input type="button" value="发 送" class="input_sub" />
+    </div>
+  </div>
+  <script type="text/javascript" src="js/jquery-1.12.4.min.js"></script>
+  <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="js/jquery.mousewheel.js"></script>
+  <!-- 导入模板引擎js文件 -->
+  <!-- <script src="./js/template-web.js"></script> -->
+  <!-- 准备一个模板 -->
+  <script id="userMsg" type="text/html">
+      <li class="right_word">
+          <img src="img/person02.png"> <span>{{msg}}</span>
+      </li>
+    </script>
+  <!-- 准备一个模板-机器人 -->
+  <script id="robotMsg" type="text/html">
+      <li class="left_word">
+          <img src="img/person01.png"> <span>{{msg}}</span>
+      </li>
+    </script>
+  <script type="text/javascript" src="js/scroll.js"></script>
+  <script>
+    $(function () {
+      /**
+       * 图灵机器人接口
+       * url：'http://www.tuling123.com/openapi/api' 
+       * type: 'post'
+       * data: {key: 'appkey', info: '用户信息', userid:'用户标示'}
+       * 返回：机器人回复信息
+       */
+      // start
+      // 1. 发送按钮注册点击事件
+      $('.input_sub').click(function () {
+        // 2. 用户点击时获取输入值
+        var ans = $('.input_txt').val();
+        console.log('问题：', ans);
+        // 3. 渲染用户输入到聊天框
+        var userTpl = `<li class="right_word">
+          <img src="img/person02.png"> <span>${ans}</span>
+      </li>`;
+        console.log(userTpl);
+
+        $('.talk_list').append(userTpl);
+        // resetui();
+        // 4. 发送请求，获取图灵机器人回复
+        $.ajax({
+          url: 'http://www.tuling123.com/openapi/api',
+          type: 'post',
+          data: { key: 'e2431e6c573f49aea10d1ce7e36d8f82', info: ans, userid: '小红' },
+          success: function (res) {
+            var rotMsg = res.text;
+            // 5. 显示回复信息
+            var rotTpl = `<li class="left_word">
+          <img src="img/person01.png"> <span>${rotMsg}</span>
+      </li>`
+            $('.talk_list').append(rotTpl);
+            // 6. 控制聊天框到当前聊天位置 
+            resetui();
+          }
+        })
+      })
+    })
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document1234</title>
+  <link rel="stylesheet" href="css/weibo.css">
+</head>
+
+<body>
+  <div class="w">
+
+    <!-- 展示的内容区域 -->
+    <div class="contentList">
+      <ul>
+
+      </ul>
+    </div>
+
+    <!-- 操作的界面区域 -->
+    <div class="controls">
+      <img src="images/tip.png" alt=""><br>
+      <input type="text" id="username" placeholder="你的昵称是...">
+      <textarea placeholder="说点什么吧..." id="area" cols="30" rows="6" maxlength="200"></textarea>
+      <div>
+        <span class="useCount">0</span>
+        <span>/</span>
+        <span>200</span>
+        <button type="button" id="send">发布</button>
+      </div>
+    </div>
+  </div>
+  
+
+  
+  <script>
+
+    // var str = '["apple", "pear"]';
+    // var str2 = '{"name": "zhangsan", "age": 20}';
+    // // JSON格式的字符串，也分数据类型。有number、bool、string、null、array、object。但是没有undefined
+    // // JSON中的任何字符串（数组的单元、对象的key、对象的值），必须加双引号
+    // // 只有语法格式正确的JSON。才能被JSON.parse()转换而不会报错
+
+    // var js = JSON.parse(str);
+
+
+    // ---------------   发送请求，获取留言，渲染页面
+    function loadData () {
+      var xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        // console.log(this.response); // 得到JSON格式的字符串
+        var res = JSON.parse(this.response);  
+        console.log(res); // 有很多单元的一个数组
+        var str = ''; // 保存所有的li标签
+        res.forEach(function (item) {
+          // item ==== {name: "学而不思则罔", content: "思而不学则怠", created: 1573025293432}
+          str += `
+          <li>
+            <div class="info"><img src="images/03.jpg"><span>${item.name}</span>
+            <p>发布于：${item.created}</p>
+            </div>
+            <div class="content">${item.content}</div>
+          </li>
+          `;
+        });
+        // 把拼接好的一堆li标签，放到ul中
+        document.querySelector('ul').innerHTML = str;
+      }
+      xhr.open('GET', '/message/getMsg');
+      xhr.send();
+    }
+
+    loadData();
+
+
+
+    // --------------    添加留言
+    document.getElementById('send').onclick = function () {
+      // 获取输入框的DOM对象
+      var uname = document.getElementById('username');
+      var content = document.getElementById('area');
+      // 发送ajax请求，让接口帮我们完成添加功能即可
+      var xhr1 = new XMLHttpRequest();
+      xhr1.onload = function () {
+        // console.log(this.response);
+        var res = JSON.parse(this.response);
+        if (res.success) {
+          // 重新渲染页面
+          loadData();
+          // 清空输入框的值
+          uname.value = content.value = '';
+        }
+      }
+      xhr1.open('POST', '/message/addMsg');
+      xhr1.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr1.send('name=' + uname.value + '&content=' + content.value);
+    }
+
+
+  </script>
+</body>
+
+</html>

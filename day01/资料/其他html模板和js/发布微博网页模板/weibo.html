@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/weibo.css">
+</head>
+
+<body>
+  <div class="w">
+    
+    <!-- 展示的内容区域 -->
+    <div class="contentList">
+      <ul>
+        <li>
+		  <div class="info"><img src="images/03.jpg"><span>张三</span>
+			<p>发布于：2019-08-20</p>
+		  </div>
+		  <div class="content">今天天气不错</div>
+		</li>
+      </ul>
+    </div>
+	
+	<!-- 操作的界面区域 -->
+    <div class="controls">
+        <img src="images/tip.png" alt=""><br>
+        <input type="text" id="username" placeholder="你的昵称是...">
+        <textarea placeholder="说点什么吧..." id="area" cols="30" rows="6" maxlength="200"></textarea>
+        <div>
+          <span class="useCount">0</span>
+          <span>/</span>
+          <span>200</span>
+          <button type="button" id="send">发布</button>
+        </div>
+    </div>
+  </div>
+</body>
+
+</html>

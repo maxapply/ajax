@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document1234</title>
+  <link rel="stylesheet" href="css/weibo.css">
+</head>
+
+<body>
+  <div class="w">
+
+    <!-- 展示的内容区域 -->
+    <div class="contentList">
+      <ul>
+
+      </ul>
+    </div>
+
+    <!-- 操作的界面区域 -->
+    <div class="controls">
+      <img src="images/tip.png" alt=""><br>
+      <input type="text" id="username" placeholder="你的昵称是...">
+      <textarea placeholder="说点什么吧..." id="area" cols="30" rows="6" maxlength="200"></textarea>
+      <div>
+        <span class="useCount">0</span>
+        <span>/</span>
+        <span>200</span>
+        <button type="button" id="send">发布</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../lib/jquery-3.4.1.min.js"></script>
+  <script>
+    // ---------------   发送请求，获取留言，渲染页面
+    function loadData() {
+      $.ajax({
+        type: 'GET',
+        url: '/message/getMsg',
+        success: function (res) {
+          console.log(res);
+          var str = '';
+          // 遍历数据
+          res.forEach(function (item) {
+            str += `
+            <li>
+              <div class="info"><img src="images/03.jpg"><span>${item.name}</span>
+              <p>发布于：${item.created}</p>
+              </div>
+              <div class="content">${item.content}</div>
+            </li>
+          `;
+          });
+          // 循环之后，把拼接好的li标签，放到ul中
+          $('ul').html(str);
+        }
+      });
+    }
+
+    loadData();
+  </script>
+
+  <script>
+    // ---------------  发送请求，发布留言
+    $('#send').click(function () {
+      // 获取两个输入框的值
+      var uname = $('#username').val().trim();
+      var content = $('#area').val().trim();
+      // 最好，做一些判断。（输入框的值不能为空、 不能太长。。。）
+      // 调用接口，完成添加即可
+      $.ajax({
+        type: 'POST',
+        url: '/message/addMsg',
+        data: {
+          name: uname,
+          content: content
+        },
+        success: function (res) {
+          // console.log(res);  // res = {success: true}
+          if (res.success) {
+            // 添加成功。调用loadData，重新渲染页面。
+            loadData();
+            // 清空输入框的值
+            $('#username').val('');
+            $('#area').val('');
+          }
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

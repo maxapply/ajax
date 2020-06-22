@@ -1,0 +1,23 @@
+FormData 对象作用：
+    快速收集表单数据
+    可以完成文件上传（如果有文件上传，则必须使用FormData）
+
+使用方法：
+    1. 表单各项（input/textarea/select）的name属性必须有。name的值必须和接口要求的请求参数一致
+    2. 找到表单的DOM对象
+    3. 实例化FormData，传递表单的dom对象
+    4. 得到的fd对象，直接提交给接口即可，不要做任何处理
+
+
+配合$.ajax使用：
+    a) 先得到FormData对象，比如叫做fd
+    b) ajax请求的时候，设置data: fd即可
+    c) 加入选项 contentType: false
+    d) 加入选项 processData: false
+
+
+原生的ajax中使用：
+    a) 先得到FormData对象，比如叫做fd
+    b) 请求方式必须是POST
+    c) send(fd);
+    d) 不要设置xhr.setRequestHeader()

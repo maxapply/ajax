@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Members</title>
+  <link href="assets/bootstrap.css" rel="stylesheet">
+</head>
+
+<body>
+  <header>
+    <div class="navbar navbar-dark navbar-expand-sm bg-dark shadow-sm">
+      <div class="container">
+        <a href="#" class="navbar-brand d-flex justify-content-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-aperture"><circle cx="12" cy="12" r="10"></circle><line x1="14.31" y1="8" x2="20.05" y2="17.94"></line><line x1="9.69" y1="8" x2="21.17" y2="8"></line><line x1="7.38" y1="12" x2="13.12" y2="2.06"></line><line x1="9.69" y1="16" x2="3.95" y2="6.06"></line><line x1="14.31" y1="16" x2="2.83" y2="16"></line><line x1="16.62" y1="12" x2="10.88" y2="21.94"></line></svg>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav">
+            <li class="nav-item active"><a class="nav-link" href="#">Members</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main role="main">
+    <section class="jumbotron mb-0 bg-white text-center">
+      <div class="container">
+        <h1 class="display-4">New member</h1>
+        <p class="lead text-muted">Add a member~</p>
+        <div>
+          <a href="#" class="btn btn-primary my-2">Members list</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="py-5 bg-light">
+      <form class="container">
+        <div class="row mb-3">
+          <div class="col-md-9">
+            <div class="form-group">
+              <label for="input_name">Member name</label>
+              <input name="name" type="text" class="form-control" id="input_name" placeholder="Enter member name">
+            </div>
+            <div class="form-group">
+              <label for="input_bio">Member bio</label>
+              <textarea name="bio" class="form-control" id="input_bio" cols="80" rows="10" placeholder="Enter member bio"></textarea>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="w-100" for="input_avatar">
+                <span class="d-block mb-2">Member avatar</span>
+                <img class="img-thumbnail w-100" src="/assets/default.png" alt="Member avatar">
+              </label>
+              <input name="avatar" accept="image/*" type="file" multiple class="form-control-file" id="input_avatar" aria-describedby="input_avatar_label">
+              <small id="input_avatar_label" class="form-text text-muted">Upload a picture.</small>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block">Save</button>
+        <!-- <select name="" id="" multiple>
+          <option value="0">北京</option>
+          <option value="1">上海</option>
+          <option value="2">天津</option>
+        </select> -->
+      </form>
+    </div>
+  </main>
+
+  <footer class="py-5 text-muted">
+    <p class="container">
+      <span>this demo &copy; heima
+      <a class="float-right" href="#">Back to top &uparrow;</a>
+    </p>
+  </footer>
+
+  <script src="./assets/jquery.js"></script>
+
+  <script>
+    // ---------------- 本地图片预览 ---------------------
+    // 当文件域的内容改变的时候，完成预览
+    $('#input_avatar').change(function () {
+      // console.log(123);
+      // 1. 找到所选的文件对象
+      // console.dir(this);
+      var fileObj = this.files[0]; // 文件对象，表示所选的图片
+      // 2. 为文件对象创建一个临时的url。临时的url用于访问该图片
+      var url = URL.createObjectURL(fileObj);
+      // console.log(url);
+      // 3. 修改 大苹果 的src为临时的url即可
+      $('.img-thumbnail').attr('src', url);
+    });
+  </script>
+
+
+  <script>
+    // 点击 button 按钮的时候，收集表单数据
+    $('.btn-block').click(function (e) {
+      e.preventDefault();
+      // 使用FormData收集表单数据
+      // 1. 找到表单的DOM对象
+      var form = $('form')[0];
+      // 2. 实例化FormData，参数是表单的DOM对象。
+      var fd = new FormData(form); // 得到的对象里面就包含了表单中所有项的值
+      console.log(fd); // fd里面的数据都是2进制的数据。看不懂，看不到。所以不用看
+      // console.log(fd.get('bio')) // 通过FormData对象的get方法，可以获取到对象中的某一项的值
+
+      // 调用接口，完成添加
+      $.ajax({
+        type: 'POST',
+        url: '/member/add',
+        data: fd,
+        // data: {name: 'xxx', content: 'yyy'},  // jQuery内部会自动把这个对象处理成字符串，形如：name=xxx&content=yyy
+        success: function (res) {
+          // 无论成功还是失败，都要给出提示
+          // alert(res.message);
+          // if (res.success) {
+          //   location.href = 'index.html';
+          // }
+        },
+        processData: false, // 不需要处理数据。处理数据指的是把对象形式的data处理成字符串
+        contentType: false  // 不需要指的请求头中的content-type
+      });
+    });
+  </script>
+</body>
+
+</html>
